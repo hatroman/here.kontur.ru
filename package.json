@@ -1,0 +1,13 @@
+{
+    "name": "here.kontur.ru",
+    "description": "A web application that draws on a map Instagram photos collected by account names and hashtags",
+    "version": "0.1.0",
+    "license": "MIT",
+    "repository": "git:https://github.com/atrisk/here.kontur.ru.git",
+    "author": "Igor Lukanin <mail@igor.lukanin.name>",
+    "dependencies": {
+        "instagram-node": "^0.5.7",
+        "log": "^1.4.0",
+        "mongodb": "2.0.7"
+    }
+}
