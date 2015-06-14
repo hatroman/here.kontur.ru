@@ -9,7 +9,7 @@ var ig            = require('instagram-node').instagram(),
 log.check(tags.length == 0, 'Provide one or more tags');
 log.check(!client_id || !client_secret, 'Provide client_id and client_secret for Instagram API');
 
-mongo.connect(mongo_url, function(err, db) {
+mongo.connect(mongo_url, function (err, db) {
     log.check(err);
 
     var collection = db.collection('photos');
@@ -22,8 +22,8 @@ mongo.connect(mongo_url, function(err, db) {
     var tag_counter   = tags.length,
         photo_counter = 0;
 
-    tags.forEach(function(tag) {
-        ig.tag_media_recent(tag, function(err, photos, remaining, limit) {
+    tags.forEach(function (tag) {
+        ig.tag_media_recent(tag, function (err, photos, remaining, limit) {
             log.check(err);
 
             photo_counter += photos.length;
