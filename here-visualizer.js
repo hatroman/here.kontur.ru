@@ -1,4 +1,5 @@
 var log       = require('./log.js').file('visualizer.log'),
+    geo       = require('./geo.js'),
     express   = require('express'),
     app       = express(),
     mongo     = require('mongodb').MongoClient,
@@ -9,14 +10,23 @@ var log       = require('./log.js').file('visualizer.log'),
 
 var photos = [];
 
+
+var getCenter = function (photos) {
+
+};
+
 app
     .use(express.static(path))
     .get('/', function (req, res) {
         res.send(path + 'index.html');
     })
     .get('/data', function (req, res) {
+        var bounds = geo.bounds(photos);
+
         res.send({
-            photos: photos
+            photos: photos,
+            bounds: bounds,
+            center: geo.center(bounds)
         });
     });
 
@@ -34,11 +44,10 @@ mongo.connect(mongo_url, function (err, db) {
         docs.forEach(function (photo) {
             photos.push({
                 location:  photo.location,
-                from:      photo.from,
                 link:      photo.link,
-                thumbnail: photo.images.thumbnail,
+                image:     photo.images.low_resolution,
                 text:      photo.caption.text,
-                created_time: photo.created_time
+                user:      photo.user
             });
         });
 

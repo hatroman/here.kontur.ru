@@ -12,8 +12,6 @@
     <div id='map'></div>
 
     <script type='text/javascript'>
-        var photos = [];
-
         var resizeMap = function() {
             $('#map').width($(window).width());
             $('#map').height($(window).height());
@@ -21,32 +19,50 @@
 
         $(window).resize(resizeMap);
 
-        $.get('/data', function (data) {
-            photos = data.photos;
-        });
-
         $(function() {
             resizeMap();
-        });
+        })
 
         ymaps.ready(function() { 
             var map = new ymaps.Map('map', {
                 center: [55.76, 37.64],
-                zoom: 4,
-                controls: []
+                zoom: 10,
+                controls: ['zoomControl']
             });
 
-            photos.forEach(function (photo) {
-                map.geoObjects.add(new ymaps.Placemark([
-                    photo.location.latitude,
-                    photo.location.longitude
-                ], {
-                    hintContent: photo.location.name,
-                    balloonContent: 'Столица России'
-                }));
+            var clusterer = new ymaps.Clusterer({ clusterDisableClickZoom: true });
+            map.geoObjects.add(clusterer);
+
+            $.get('/data', function(data) {
+                map.setCenter([
+                    data.center.latitude,
+                    data.center.longitude
+                ], 6);
+
+                map.setBounds([[
+                    data.bounds.min_latitude,
+                    data.bounds.min_longitude
+                ], [
+                    data.bounds.max_latitude,
+                    data.bounds.max_longitude
+                ]]);
+
+                data.photos.forEach(function (photo) {
+                    clusterer.add(new ymaps.Placemark([
+                        photo.location.latitude,
+                        photo.location.longitude
+                    ], {
+                        balloonContentHeader: photo.user.full_name || photo.user.username,
+                        balloonContentBody: '<img src="' + photo.image.url + '">',
+                        balloonContentFooter: photo.location.name,
+                        hintContent: '@' + photo.user.username
+                    }, {
+                        preset:    'islands#circleIcon',
+                        iconColor: 'rgb(211, 42, 44)'
+                    }));
+                });
             });
         });
     </script>
 </body>
-
 </html>
