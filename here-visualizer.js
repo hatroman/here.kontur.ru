@@ -6,7 +6,7 @@ var log       = require('./log.js').file('visualizer.log'),
     mongo_url = 'mongodb://localhost:27017/here_kontur_ru',
     path      = './web/',
     port      = process.argv[2] || 80,
-    limit     = process.argv[3] || 1000;
+    limit     = process.argv[3] || 750;
 
 var photos = [];
 
