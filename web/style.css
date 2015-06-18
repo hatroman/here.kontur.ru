@@ -2,6 +2,34 @@ body {
     margin: 0;
 }
 
-#map {
-    
+.blurred {
+    filter: blur(10px);
+    filter: url("blur.svg#gaussian_blur");
+    -webkit-filter: blur(10px);
+    -o-filter: blur(10px);
+}
+
+#geo-view-wrapper {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 6000;
+    top: 0;
+    left: 0;
+}
+
+#geo-view {
+    display: none;
+    position: absolute;
+    width: 640px;
+    height: 720px;
+    z-index: 6001;
+    top: 50%;
+    left: 50%;
+    margin: -360px 0 0 -320px;
+}
+
+.fotorama a {
+    font-size: 1.5em;
 }

@@ -19,27 +19,44 @@ mongo.connect(mongo_url, function (err, db) {
         client_secret: client_secret
     });
 
-    var tag_counter   = tags.length,
-        photo_counter = 0;
+    var upserted_count = 0;
 
-    tags.forEach(function (tag) {
-        ig.tag_media_recent(tag, function (err, photos, remaining, limit) {
-            log.check(err);
+    var use = function (err, photos, pagination, remaining, limit) {
+        if (err) {
+            console.log('Retrying after ' + err.code + '...');
 
-            photo_counter += photos.length;
-            --tag_counter;
+            setTimeout(function() {
+                err.retry();
+            }, 1000);
 
-            photos.forEach(function (photo) {
-                collection.updateOne({ id: photo.id }, photo, { upsert: true }, function(err, result) {
-                    log.check(err);
+            return;
+        }
 
-                    --photo_counter;
+        photos.forEach(function (photo) {
+            collection.updateOne({ id: photo.id }, photo, { upsert: true }, function(err, result) {
+                log.check(err);
 
-                    if (tag_counter + photo_counter == 0) {
-                        db.close();
-                    }
-                });
+                upserted_count += result.upsertedCount;
             });
         });
+
+        if (upserted_count > 0 && pagination.next) {
+            pagination.next(use);
+        }
+        else {
+            --tag_count;
+
+            if (tag_count == 0) {
+                setTimeout(function() {
+                    db.close();
+                }, 10000);
+            }
+        }
+    };
+
+    var tag_count = tags.length;
+
+    tags.forEach(function (tag) {
+        ig.tag_media_recent(tag, use);
     });
 });

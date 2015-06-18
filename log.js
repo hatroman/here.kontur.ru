@@ -8,6 +8,12 @@ module.exports = {
             log: new Log('error', fs.createWriteStream(path + name, { flags: 'a' })),
 
             check: function(condition, message) {
+                this.write(condition, message, function() {
+                    process.exit(1);
+                });
+            },
+
+            write: function(condition, message, callback) {
                 if (condition) {
                     if (message == undefined) {
                         message = condition;
@@ -15,8 +21,10 @@ module.exports = {
 
                     console.log(message);
                     this.log.error(message);
-                    
-                    process.exit(1);
+
+                    if (callback) {
+                        callback();
+                    }
                 }
             }
         };

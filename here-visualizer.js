@@ -6,14 +6,9 @@ var log       = require('./log.js').file('visualizer.log'),
     mongo_url = 'mongodb://localhost:27017/here_kontur_ru',
     path      = './web/',
     port      = process.argv[2] || 80,
-    limit     = process.argv[3] || 100;
+    limit     = process.argv[3] || 1000;
 
 var photos = [];
-
-
-var getCenter = function (photos) {
-
-};
 
 app
     .use(express.static(path))
@@ -34,7 +29,7 @@ mongo.connect(mongo_url, function (err, db) {
     log.check(err);
 
     db.collection('photos').find({
-        location: { $ne: null }
+        'location.latitude': { $ne: null }
     }, {
         limit: limit,
         sort: [['created_time', 'desc']]
@@ -45,9 +40,10 @@ mongo.connect(mongo_url, function (err, db) {
             photos.push({
                 location:  photo.location,
                 link:      photo.link,
-                image:     photo.images.low_resolution,
-                text:      photo.caption.text,
-                user:      photo.user
+                image_l:   photo.images.standard_resolution.url,
+                image_s:   photo.images.thumbnail.url,
+                text:      photo.caption ? photo.caption.text : '',
+                user:      photo.user.username
             });
         });
 

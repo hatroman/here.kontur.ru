@@ -8,12 +8,12 @@ module.exports = {
         };
 
         if (photos.length > 0) {
-            var photo = photos.shift();
+            var photo = photos[0];
 
             bounds.min_latitude = bounds.max_latitude = photo.location.latitude;
             bounds.min_longitude = bounds.max_longitude = photo.location.longitude;
 
-            photos.forEach(function (photo) {
+            photos.slice(1).forEach(function (photo) {
                 if (photo.location.latitude < bounds.min_latitude) {
                     bounds.min_latitude = photo.location.latitude;
                 }
