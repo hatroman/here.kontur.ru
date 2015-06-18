@@ -33,7 +33,7 @@
                 data.push({
                     img: photo.image_l,
                     thumb: photo.image_s,
-                    caption: '<a target="_blank" href="' + photo.link + '">' + photo.user + ': ' + photo.text + '</a>'
+                    caption: '<a target="_blank" href="' + photo.link + '"><b>' + photo.user + ':</b> ' + photo.text + '</a>'
                 });
             });
 
@@ -111,8 +111,8 @@
 
                     data.photos.forEach(function (photo) {
                         clusterer.add(new ymaps.Placemark([
-                            photo.location.latitude,
-                            photo.location.longitude
+                            photo.latitude,
+                            photo.longitude
                         ], { photo: photo }, { preset: 'islands#circleIcon' }));
                     });
                 });

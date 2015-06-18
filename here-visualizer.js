@@ -38,12 +38,13 @@ mongo.connect(mongo_url, function (err, db) {
 
         docs.forEach(function (photo) {
             photos.push({
-                location:  photo.location,
-                link:      photo.link,
-                image_l:   photo.images.standard_resolution.url,
-                image_s:   photo.images.thumbnail.url,
-                text:      photo.caption ? photo.caption.text : '',
-                user:      photo.user.username
+                latitude:   photo.location.latitude,
+                longitude:  photo.location.longitude,
+                link:       photo.link,
+                image_l:    photo.images.standard_resolution.url,
+                image_s:    photo.images.thumbnail.url,
+                text:       photo.caption ? photo.caption.text : '',
+                user:       photo.user.username
             });
         });
 
